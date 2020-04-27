@@ -3,6 +3,7 @@ import EnvetsHandler from "./events";
 import Fetcher from "./services/fetcher.service";
 import Search from "./controllers/search.controller";
 import SearchView from "./views/search/search.view";
+import Offline from "./services/offline.service";
 
 /**
  * Main application class
@@ -16,6 +17,7 @@ export default class App {
 	 */
 	public async initialize(): Promise<void> {
 		const components: IComponent[] = [
+			Offline,
 			Fetcher,
 			new SearchView(),
 			new Search()
