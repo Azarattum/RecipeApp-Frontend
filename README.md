@@ -1,25 +1,11 @@
-# The Framework [BROWSER]
-For easy development of js/ts applications.
+# Recipe App [Front End]
+Front end web interface for [RecipeApp-Backend](https://github.com/Azarattum/RecipeApp-Backend)
 
-This is **browser** branch. Check [**node**](https://github.com/Azarattum/TheFramework/tree/node) for NodeJS development.
-
-## Features & Technologies:
-  - Uses **Typescript**
-  - Bundles with **Webpack**
-  - Preconfigured **ESList**
-  - Preconfigured **Prettier**
-  - Uses **Sass** as css preprocessor
-  - Uses **Pug** for HTML templates
-  - Preconfigured WebWorkers for Webpack
-  - Preconfigured ServiceWorker from **Workbox Plugin**
-  - Preconfigured GL Shaders loader
-  - Preconfigured **Chrome Debugger**
-  - Event-driven
-  - Strict naming and hierarchy
-  - Ligtweight
+## Features:
+  - Search your recipes with nice UI
 
 ### Usage:
-Clone this repo and start developing your website.
+Start your web server from ./dist folder. Your can change the API address in ./src/components/app/app.ts file.
 
 ### Installation: 
 Install all dependencies:

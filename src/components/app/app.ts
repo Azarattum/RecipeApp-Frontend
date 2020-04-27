@@ -1,5 +1,6 @@
 import Manager, { IComponent, ComponentArgs } from "../common/manager.class";
 import EnvetsHandler from "./events";
+import Fetcher from "./services/fetcher.service";
 
 /**
  * Main application class
@@ -12,9 +13,7 @@ export default class App {
 	 * Initializes the app
 	 */
 	public async initialize(): Promise<void> {
-		const components: IComponent[] = [
-			///Add your new components here
-		];
+		const components: IComponent[] = [Fetcher];
 
 		this.manger = new Manager(components);
 		this.events = new EnvetsHandler(components);
@@ -33,7 +32,7 @@ export default class App {
 		}
 
 		return {
-			///Return your components init args here
+			Fetcher: ["https://recipe.hldns.ru"]
 		};
 	}
 
