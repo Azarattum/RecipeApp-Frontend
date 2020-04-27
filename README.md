@@ -1,5 +1,5 @@
 # Recipe App [Front End]
-Front end web interface for [RecipeApp-Backend](https://github.com/Azarattum/RecipeApp-Backend)
+Front end web interface for [RecipeApp-Backend](https://github.com/Azarattum/RecipeApp-Backend).
 
 ## Features:
   - Search your recipes with nice UI
