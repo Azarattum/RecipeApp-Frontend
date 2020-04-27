@@ -43,8 +43,10 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				use: ["style-loader", "css-loader", "sass-loader"],
-				include: Path.resolve(__dirname, "./src"),
-				include: Path.resolve(__dirname, "./node_modules")
+				include: [
+					Path.resolve(__dirname, "./src"),
+					Path.resolve(__dirname, "./node_modules")
+				]
 			},
 			{
 				test: /\.(vsh|fsh)$/,

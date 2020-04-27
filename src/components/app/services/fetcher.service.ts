@@ -37,7 +37,9 @@ export default class Fetcher extends Service<
 		let response = null;
 		try {
 			response = await fetch(
-				`${this.url}/api/ingredients/search/${name}`,
+				`${
+					this.url
+				}/api/ingredients/search/${name.toLocaleLowerCase()}`,
 				{ mode: "cors", signal: this.abortIngredientsController.signal }
 			);
 		} catch (DOMException) {
@@ -45,7 +47,13 @@ export default class Fetcher extends Service<
 			return null;
 		}
 
-		const json = await response.json();
+		let json = null;
+		try {
+			json = await response.json();
+		} catch (SyntaxError) {
+			this.emit("gotingredients", null);
+			return null;
+		}
 
 		this.emit("gotingredients", json);
 		return json as IIngredientResult[] | null;

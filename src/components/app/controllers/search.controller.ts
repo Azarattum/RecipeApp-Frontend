@@ -20,6 +20,7 @@ export default class Search extends Controller<"suggested">() {
 	public async initialize(): Promise<void> {
 		this.tagify = new Tagify(this.container);
 		this.tagify.settings.enforceWhitelist = true;
+		this.tagify.settings.delimiters = /[\n&]/g;
 		this.tagify.on("input", this.loadSuggestions.bind(this));
 	}
 
@@ -28,6 +29,10 @@ export default class Search extends Controller<"suggested">() {
 	 * @param event Event data
 	 */
 	private loadSuggestions(event: { detail: any }): void {
+		if (event.detail.value.endsWith("&")) {
+			return;
+		}
+
 		this.tagify.loading(true);
 		this.emit("suggested", event.detail.value);
 	}
