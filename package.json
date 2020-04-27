@@ -5,7 +5,9 @@
 		"build": "node_modules/.bin/webpack-cli -d --progress",
 		"watch": "node_modules/.bin/webpack-cli -d -w"
 	},
-	"dependencies": {},
+	"dependencies": {
+		"@yaireo/tagify": "^3.7.1"
+	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^2.24.0",
 		"@typescript-eslint/parser": "^2.24.0",

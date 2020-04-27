@@ -7,6 +7,11 @@ declare module "worker-loader!*" {
 	export default WebpackWorker;
 }
 
+declare module "@yaireo/tagify" {
+	const tagify: any;
+	export = tagify;
+}
+
 declare module "*.vsh" {
 	const string: string;
 

@@ -1,9 +1,14 @@
 import { IComponent } from "../common/manager.class";
+import Search from "./controllers/search.controller";
+import Fetcher from "./services/fetcher.service";
+import { IIngredient } from "./models/recipe.interface";
 
 /**
  * Event handler for application components
  */
 export default class EnvetsHandler {
+	private searchController: Search;
+	private fetcherService: typeof Fetcher;
 	/**
 	 * Creates new envet handler for components
 	 * @param components Components to handle interactions with
@@ -13,14 +18,27 @@ export default class EnvetsHandler {
 		components.forEach(x => (component[x.name] = x));
 
 		//Defining all components
-		///this.example = component["Example"] as typeof Example;
+		this.searchController = component["Search"] as Search;
+		this.fetcherService = component["Fetcher"] as typeof Fetcher;
 	}
 
 	/**
 	 * Registers all events for components
 	 */
 	public async registerEvents(): Promise<void> {
-		///Register your events here
-		///this.example.on("example", () => {});
+		//Search suggest event
+		this.searchController.on("suggested", (value: string) => {
+			this.fetcherService.searchIngredients(value);
+		});
+
+		//Fetcher got ingredient results event
+		this.fetcherService.on(
+			"gotingredients",
+			(ingredients: IIngredient[] | null) => {
+				this.searchController.addSuggestions(
+					ingredients ? ingredients.map(x => x.name) : []
+				);
+			}
+		);
 	}
 }

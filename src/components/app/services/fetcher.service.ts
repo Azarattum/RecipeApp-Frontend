@@ -9,12 +9,14 @@ export default class Fetcher extends Service<
 	"gotingredients" | "gotrecipes" | "gotrecipe"
 >() {
 	private static url: string;
+	private static abortIngredientsController: AbortController;
 
 	/**
 	 * Initialization of Fetcher service
 	 */
 	public static async initialize(url: string): Promise<void> {
 		this.url = url;
+		this.abortIngredientsController = new AbortController();
 	}
 
 	/**
@@ -24,10 +26,25 @@ export default class Fetcher extends Service<
 	public static async searchIngredients(
 		name: string
 	): Promise<IIngredientResult[] | null> {
-		const response = await fetch(
-			`${this.url}/api/ingredients/search/${name}`,
-			{ mode: "cors" }
-		);
+		if (!name) {
+			this.emit("gotingredients", null);
+			return null;
+		}
+
+		this.abortIngredientsController.abort();
+		this.abortIngredientsController = new AbortController();
+
+		let response = null;
+		try {
+			response = await fetch(
+				`${this.url}/api/ingredients/search/${name}`,
+				{ mode: "cors", signal: this.abortIngredientsController.signal }
+			);
+		} catch (DOMException) {
+			this.emit("gotingredients", null);
+			return null;
+		}
+
 		const json = await response.json();
 
 		this.emit("gotingredients", json);

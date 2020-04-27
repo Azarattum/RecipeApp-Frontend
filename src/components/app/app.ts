@@ -1,6 +1,8 @@
 import Manager, { IComponent, ComponentArgs } from "../common/manager.class";
 import EnvetsHandler from "./events";
 import Fetcher from "./services/fetcher.service";
+import Search from "./controllers/search.controller";
+import SearchView from "./views/search/search.view";
 
 /**
  * Main application class
@@ -13,7 +15,11 @@ export default class App {
 	 * Initializes the app
 	 */
 	public async initialize(): Promise<void> {
-		const components: IComponent[] = [Fetcher];
+		const components: IComponent[] = [
+			Fetcher,
+			new SearchView(),
+			new Search()
+		];
 
 		this.manger = new Manager(components);
 		this.events = new EnvetsHandler(components);
