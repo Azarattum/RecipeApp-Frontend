@@ -1,1 +1,5 @@
-input(type="text" controller="search")
+div.search-container(controller="search")
+    input.search-container(type="text")
+    input(type="checkbox" id="checkbox-strict")
+    label(for="checkbox-strict") Strict
+    button.search-button(onclick="Controller.search()") Search

@@ -2,6 +2,7 @@ import { IComponent } from "../common/manager.class";
 import Search from "./controllers/search.controller";
 import Fetcher from "./services/fetcher.service";
 import { IIngredient } from "./models/recipe.interface";
+import { IRecipeResult } from "./models/results.interface";
 
 /**
  * Event handler for application components
@@ -31,6 +32,12 @@ export default class EnvetsHandler {
 			this.fetcherService.searchIngredients(value);
 		});
 
+		//Search for recipe event
+		this.searchController.on("searched", (ingredients: string[], strict: boolean) => {
+			if (ingredients.length <= 0) return;
+			this.fetcherService.searchRecipes(ingredients, strict);
+		});
+
 		//Fetcher got ingredient results event
 		this.fetcherService.on(
 			"gotingredients",
@@ -40,5 +47,10 @@ export default class EnvetsHandler {
 				);
 			}
 		);
+
+		//Fetcher got recipe results event
+		this.fetcherService.on("gotrecipes", (recipes: IRecipeResult[] | null) => {
+			console.log(recipes);
+		});
 	}
 }
