@@ -3,7 +3,9 @@ import EnvetsHandler from "./events";
 import Fetcher from "./services/fetcher.service";
 import Search from "./controllers/search.controller";
 import SearchView from "./views/search/search.view";
+import RecipesView from "./views/recipes/recipes.view";
 import Offline from "./services/offline.service";
+import Recipes from "./controllers/recipes.controller";
 
 /**
  * Main application class
@@ -19,8 +21,10 @@ export default class App {
 		const components: IComponent[] = [
 			Offline,
 			Fetcher,
+			new RecipesView(),
 			new SearchView(),
-			new Search()
+			new Search(),
+			new Recipes()
 		];
 
 		this.manger = new Manager(components);
@@ -40,7 +44,8 @@ export default class App {
 		}
 
 		return {
-			Fetcher: ["https://recipe.hldns.ru"]
+			Fetcher: ["https://recipe.hldns.ru"],
+			Recipes: ["https://res.cloudinary.com/recipe-images/raw/upload/"]
 		};
 	}
 

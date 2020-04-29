@@ -3,12 +3,14 @@ import Search from "./controllers/search.controller";
 import Fetcher from "./services/fetcher.service";
 import { IIngredient } from "./models/recipe.interface";
 import { IRecipeResult } from "./models/results.interface";
+import Recipes from "./controllers/recipes.controller";
 
 /**
  * Event handler for application components
  */
 export default class EnvetsHandler {
 	private searchController: Search;
+	private recipesController: Recipes;
 	private fetcherService: typeof Fetcher;
 	/**
 	 * Creates new envet handler for components
@@ -20,6 +22,7 @@ export default class EnvetsHandler {
 
 		//Defining all components
 		this.searchController = component["Search"] as Search;
+		this.recipesController = component["Recipes"] as Recipes;
 		this.fetcherService = component["Fetcher"] as typeof Fetcher;
 	}
 
@@ -50,7 +53,7 @@ export default class EnvetsHandler {
 
 		//Fetcher got recipe results event
 		this.fetcherService.on("gotrecipes", (recipes: IRecipeResult[] | null) => {
-			console.log(recipes);
+			this.recipesController.updateRecipes(recipes ? recipes : []);
 		});
 	}
 }
