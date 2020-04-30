@@ -1,0 +1,10 @@
+.recipes-container {
+	.recipes-list {
+		.recipe:not(.active) {
+			.ingredients,
+			.recipe-data {
+				display: none;
+			}
+		}
+	}
+}

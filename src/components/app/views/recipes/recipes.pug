@@ -1,8 +1,20 @@
 div.recipes-container(controller="recipes")
+    div.loader.hidden Loading...
     div.recipes-list
     template.recipe-template
-        div.recipe
+        div.recipe(onclick="Controller.selectRecipe(this.dataset.id)" data-id="0")
             img.picture
             div.title
             div.description
             div.time
+            dev.loader.hidden Loading...
+            div.ingredients
+            div.recipe-data
+    template.recipe-item-template
+        div.recipe-item
+            img.step
+            p.text
+    template.ingredient-template
+        div.ingredient-item
+            div.name
+            div.amount

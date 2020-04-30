@@ -1,7 +1,7 @@
 import { IComponent } from "../common/manager.class";
 import Search from "./controllers/search.controller";
 import Fetcher from "./services/fetcher.service";
-import { IIngredient } from "./models/recipe.interface";
+import IRecipe, { IIngredient } from "./models/recipe.interface";
 import { IRecipeResult } from "./models/results.interface";
 import Recipes from "./controllers/recipes.controller";
 
@@ -36,9 +36,19 @@ export default class EnvetsHandler {
 		});
 
 		//Search for recipe event
-		this.searchController.on("searched", (ingredients: string[], strict: boolean) => {
-			if (ingredients.length <= 0) return;
-			this.fetcherService.searchRecipes(ingredients, strict);
+		this.searchController.on(
+			"searched",
+			(ingredients: string[], strict: boolean) => {
+				if (ingredients.length <= 0) return;
+				this.recipesController.setLoading();
+				this.fetcherService.searchRecipes(ingredients, strict);
+			}
+		);
+
+		//Requested recipe data event
+		this.recipesController.on("reciped", (recipeId: number) => {
+			if (!recipeId) return;
+			this.fetcherService.getRecipe(recipeId);
 		});
 
 		//Fetcher got ingredient results event
@@ -52,8 +62,17 @@ export default class EnvetsHandler {
 		);
 
 		//Fetcher got recipe results event
-		this.fetcherService.on("gotrecipes", (recipes: IRecipeResult[] | null) => {
-			this.recipesController.updateRecipes(recipes ? recipes : []);
+		this.fetcherService.on(
+			"gotrecipes",
+			(recipes: IRecipeResult[] | null) => {
+				this.recipesController.updateRecipes(recipes ? recipes : []);
+			}
+		);
+
+		//Fetcher got recipe data event
+		this.fetcherService.on("gotrecipe", (recipe: IRecipe | null) => {
+			if (!recipe) return;
+			this.recipesController.updateRecipeData(recipe.id, recipe);
 		});
 	}
 }
