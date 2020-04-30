@@ -136,9 +136,10 @@ export default class Recipes extends Controller<"reciped">() {
 
 			const text = node.querySelector(".text");
 			const step = node.querySelector(".step") as HTMLImageElement;
-			if (!steps) continue;
+			if (!steps[i]) continue;
 			if (text) text.innerHTML = steps[i];
 			if (data.steps[i] && step) step.src = this.url + data.steps[i];
+			else step.remove();
 
 			recipeData.appendChild(node);
 		}
