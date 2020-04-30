@@ -38,6 +38,20 @@ export default class Recipes extends Controller<"reciped">() {
 		this.url = resourcesUrl;
 
 		this.expose("selectRecipe");
+		this.expose("deselectRecipe");
+	}
+
+	/**
+	 * Removes current active recipe and reveals the rest
+	 */
+	public deselectRecipe(): void {
+		if (!this.list) return;
+
+		this.activeRecipeId = 0;
+		this.list.querySelectorAll(".recipe").forEach(recipe => {
+			recipe.classList.remove("hidden");
+			recipe.classList.remove("active");
+		});
 	}
 
 	/**
@@ -47,20 +61,22 @@ export default class Recipes extends Controller<"reciped">() {
 	public selectRecipe(recipeId: number): void {
 		if (!this.list) return;
 		if (recipeId == this.activeRecipeId) return;
+		const selected = this.list.querySelector(
+			`.recipe[data-id="${recipeId}"]`
+		);
+
+		if (!selected) return;
 
 		this.activeRecipeId = recipeId;
 		this.list.querySelectorAll(".recipe").forEach(recipe => {
 			recipe.classList.add("hidden");
 		});
 
-		const selected = this.list.querySelector(
-			`.recipe[data-id="${recipeId}"]`
-		);
-		selected?.classList.remove("hidden");
-		selected?.classList.add("active");
+		selected.classList.remove("hidden");
+		selected.classList.add("active");
 		//Show loader if no data was previously available
-		if (selected?.querySelector(".ingredients")?.children.length == 0) {
-			selected?.querySelector(".loader")?.classList.remove("hidden");
+		if (selected.querySelector(".ingredients")?.children.length == 0) {
+			selected.querySelector(".loader")?.classList.remove("hidden");
 		}
 
 		this.emit("reciped", recipeId);
