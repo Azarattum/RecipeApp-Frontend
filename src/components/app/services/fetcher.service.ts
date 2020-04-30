@@ -10,6 +10,8 @@ export default class Fetcher extends Service<
 >() {
 	private static url: string;
 	private static abortIngredientsController: AbortController;
+	private static abortSearchController: AbortController;
+	private static abortRecipeController: AbortController;
 
 	/**
 	 * Initialization of Fetcher service
@@ -17,6 +19,8 @@ export default class Fetcher extends Service<
 	public static async initialize(url: string): Promise<void> {
 		this.url = url;
 		this.abortIngredientsController = new AbortController();
+		this.abortSearchController = new AbortController();
+		this.abortRecipeController = new AbortController();
 	}
 
 	/**
@@ -51,8 +55,7 @@ export default class Fetcher extends Service<
 		try {
 			json = await response.json();
 		} catch (SyntaxError) {
-			this.emit("gotingredients", null);
-			return null;
+			//Do nothing
 		}
 
 		this.emit("gotingredients", json);
@@ -67,15 +70,30 @@ export default class Fetcher extends Service<
 		ingredients: string[],
 		strict: boolean = false
 	): Promise<IRecipeResult[] | null> {
-		const response = await fetch(
-			`${this.url}/api/recipe/search/${ingredients.join("&")}${
-				strict ? "/strict" : ""
-			}`,
-			{
-				mode: "cors"
-			}
-		);
-		const json = await response.json();
+		this.abortSearchController.abort();
+		this.abortSearchController = new AbortController();
+
+		let response;
+		try {
+			response = await fetch(
+				`${this.url}/api/recipe/search/${ingredients.join("&")}${
+					strict ? "/strict" : ""
+				}`,
+				{
+					mode: "cors",
+					signal: this.abortSearchController.signal
+				}
+			);
+		} catch (DOMException) {
+			return null;
+		}
+
+		let json = null;
+		try {
+			json = await response.json();
+		} catch (SyntaxError) {
+			//Do nothing
+		}
 
 		this.emit("gotrecipes", json);
 		return json as IRecipeResult[] | null;
@@ -86,10 +104,25 @@ export default class Fetcher extends Service<
 	 * @param id Recipe id
 	 */
 	public static async getRecipe(id: number): Promise<IRecipe | null> {
-		const response = await fetch(`${this.url}/api/recipe/get/${id}`, {
-			mode: "cors"
-		});
-		const json = await response.json();
+		this.abortRecipeController.abort();
+		this.abortRecipeController = new AbortController();
+
+		let response;
+		try {
+			response = await fetch(`${this.url}/api/recipe/get/${id}`, {
+				mode: "cors",
+				signal: this.abortRecipeController.signal
+			});
+		} catch (DOMException) {
+			return null;
+		}
+
+		let json = null;
+		try {
+			json = await response.json();
+		} catch (SyntaxError) {
+			//Do nothing
+		}
 
 		this.emit("gotrecipe", json);
 		return json as IRecipe | null;
