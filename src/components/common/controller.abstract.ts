@@ -1,5 +1,8 @@
 /* eslint @typescript-eslint/explicit-function-return-type: 0 */
 
+import Binding from "./binding.class";
+import Utils from "./utils.class";
+
 /**
  * Event-driven controller generic type builder
  */
@@ -16,12 +19,33 @@ export default function Controller<T extends string>() {
 		private callbacks: { [type: string]: Function[] } = {};
 		/**Last event sender */
 		private sender: HTMLElement | null = null;
+		/**Placeholders list */
+		private bindings: Map<HTMLElement, Binding> | null = null;
 
 		/**
 		 * Creates controller class
 		 */
 		protected constructor(name: string) {
 			this.name = name;
+		}
+
+		/**
+		 * Initializes data binding for the controller
+		 */
+		protected bind(): void {
+			this.bindings = new Map();
+
+			const containers = Array.from(
+				document.querySelectorAll(
+					`[controller=${(this as any).name.toLowerCase()}]`
+				)
+			).reverse() as HTMLElement[];
+
+			for (const container of containers) {
+				const binding = new Binding(container);
+				binding.bind();
+				this.bindings.set(container, binding);
+			}
 		}
 
 		/**
@@ -64,25 +88,47 @@ export default function Controller<T extends string>() {
 			if (!(globalThis as any)[this.name]) {
 				(globalThis as any)[this.name] = {};
 			}
+			const exposed =
+				func || ((this as any)[name] as Function).bind(this);
 
-			if (func) {
-				(globalThis as any)[this.name][name] = (...args: any[]) => {
-					if (event?.target) {
-						this.sender = event.target as HTMLElement;
+			(globalThis as any)[this.name][name] = (...args: any[]) => {
+				let result: any;
+				if (event?.target) {
+					this.sender = event.target as HTMLElement;
+					result = exposed(...args);
+				} else {
+					//Evaluate function as with every single container
+					const containers = Array.from(
+						document.querySelectorAll(
+							`[controller=${(this as any).name.toLowerCase()}]`
+						)
+					).reverse();
+
+					result = new Set();
+					let object = null;
+					for (const container of containers) {
+						this.sender = container as HTMLElement;
+						const res = exposed(...args);
+
+						if (res != undefined) {
+							if (typeof res == "object") {
+								if (!object) object = {};
+								Utils.mergeObjects(object, res);
+							} else {
+								result.add(res);
+							}
+						}
 					}
-					func(...args);
-				};
-			} else {
-				if (typeof (this as any)[name] != "function") {
-					throw new Error("The function to expose not found!");
+					result =
+						object ||
+						(result.size > 1
+							? Array.from(result)
+							: result.values().next().value);
+
+					this.sender = null;
 				}
-				(globalThis as any)[this.name][name] = (...args: any[]) => {
-					if (event?.target) {
-						this.sender = event.target as HTMLElement;
-					}
-					((this as any)[name] as Function).call(this, ...args);
-				};
-			}
+				return result;
+			};
 		}
 
 		/**
@@ -106,12 +152,71 @@ export default function Controller<T extends string>() {
 
 			return container as HTMLElement;
 		}
+
+		/**
+		 * Binded to the controller data
+		 */
+		protected get data(): Record<string, any> {
+			if (!this.bindings) {
+				throw new Error("Use this.bind() to bind your data first!");
+			}
+
+			let bindings: Binding[] = [];
+			if (this.sender) {
+				const binding = this.bindings.get(this.container);
+				if (binding) bindings = [binding];
+			} else {
+				bindings = Array.from(this.bindings.values());
+			}
+
+			const handler = {
+				get: (object: any, property: any): any => {
+					const path =
+						(object.__origin ? object.__origin + "." : "") +
+						property;
+
+					const data = object[property];
+					//Continue searching
+					if (typeof data == "object") {
+						return new Proxy({ ...data, __origin: path }, handler);
+					}
+					if (data === undefined) {
+						return new Proxy({ ...data, __origin: path }, handler);
+					}
+
+					return data;
+				},
+				set: (object: any, property: string, value: any) => {
+					if (!this.bindings) return false;
+					const path =
+						(object.__origin ? object.__origin + "." : "") +
+						property;
+
+					object[property] = value;
+					for (const binding of bindings) {
+						binding.set(path, value);
+					}
+
+					return true;
+				}
+			};
+
+			const data: any = {};
+			for (const binding of bindings) {
+				Utils.mergeObjects(data, binding.get());
+			}
+			data.__origin = "";
+			return new Proxy(data, handler);
+		}
 	}
 
 	//Return controller with specific typings
 	return Controller;
 }
 
+if (typeof globalThis === "undefined") {
+	(window as any).globalThis = window;
+}
 /**
  * Smart controller shortcut to the nearest controller property in DOM
  */

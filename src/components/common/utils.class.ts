@@ -59,6 +59,30 @@ export default class Utils {
 				throw new TypeError("Unknown log type!");
 		}
 	}
+
+	/**
+	 * Merges properties of two objects
+	 * @param to Destination object
+	 * @param from Source objecr
+	 */
+	public static mergeObjects(to: any, from: any): void {
+		for (const key in from) {
+			if (typeof from[key] === "object") {
+				if (!to[key]) to[key] = {};
+				this.mergeObjects(to[key], from[key]);
+			} else {
+				if (!to[key]) {
+					to[key] = from[key];
+				} else if (Array.isArray(to[key])) {
+					if (!to[key].includes(from[key])) {
+						to[key].push(from[key]);
+					}
+				} else if (to[key] != from[key]) {
+					to[key] = [to[key], from[key]];
+				}
+			}
+		}
+	}
 }
 
 /**
