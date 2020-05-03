@@ -2,7 +2,7 @@
 	.recipes-list {
 		.recipe:not(.active) {
 			.ingredients,
-			.recipe-data {
+			.steps {
 				display: none;
 			}
 		}

@@ -6,12 +6,10 @@ import IRecipe from "../models/recipe.interface";
  * Service that represents template for a new services
  */
 export default class Recipes extends Controller<"reciped">() {
-	private recipeTemplate: HTMLTemplateElement | null = null;
-	private ingredientTemplate: HTMLTemplateElement | null = null;
-	private itemTemplate: HTMLTemplateElement | null = null;
 	private list: HTMLInputElement | null = null;
 	private url: string = "";
 	private activeRecipeId: number = 0;
+	private recipes: IRecipeResult[] = [];
 	public loading: boolean = false;
 
 	/**
@@ -25,15 +23,8 @@ export default class Recipes extends Controller<"reciped">() {
 	 * Initialization of Recipes controller
 	 */
 	public async initialize(resourcesUrl: string): Promise<void> {
-		this.recipeTemplate = this.container.querySelector(
-			"template.recipe-template"
-		);
-		this.itemTemplate = this.container.querySelector(
-			"template.recipe-item-template"
-		);
-		this.ingredientTemplate = this.container.querySelector(
-			"template.ingredient-template"
-		);
+		this.bind();
+
 		this.list = this.container.querySelector(".recipes-list");
 		this.url = resourcesUrl;
 
@@ -60,7 +51,7 @@ export default class Recipes extends Controller<"reciped">() {
 	 */
 	public selectRecipe(recipeId: number): void {
 		if (!this.list) return;
-		if (recipeId == this.activeRecipeId) return;
+		if (recipeId === this.activeRecipeId) return;
 		const selected = this.list.querySelector(
 			`.recipe[data-id="${recipeId}"]`
 		);
@@ -101,28 +92,17 @@ export default class Recipes extends Controller<"reciped">() {
 	 * @param recipes New recipes to add
 	 */
 	public updateRecipes(recipes: IRecipeResult[]): void {
-		if (!this.list || !this.recipeTemplate) return;
+		for (const recipe of recipes) {
+			recipe.picture = this.url + recipe.picture;
+		}
 
+		this.safe = false;
+		this.data.recipes = recipes;
+		this.safe = true;
+
+		this.recipes = recipes;
 		this.activeRecipeId = 0;
 		this.setLoading(false);
-		this.list.innerHTML = "";
-		for (const recipe of recipes) {
-			const node = this.recipeTemplate.content.cloneNode(
-				true
-			) as DocumentFragment;
-			const title = node.querySelector(".title");
-			const description = node.querySelector(".description");
-			const time = node.querySelector(".time");
-			const picture = node.querySelector(".picture") as HTMLImageElement;
-
-			(node.firstChild as HTMLElement).dataset.id = recipe.id.toString();
-			if (title) title.innerHTML = recipe.title;
-			if (description) description.innerHTML = recipe.description;
-			if (time) time.innerHTML = recipe.time;
-			if (picture) picture.src = this.url + recipe.picture;
-
-			this.list.appendChild(node);
-		}
 	}
 
 	/**
@@ -138,46 +118,19 @@ export default class Recipes extends Controller<"reciped">() {
 			?.classList.add("hidden");
 
 		//Add recipe data
-		const recipeData = this.list.querySelector(
-			`.recipe[data-id="${id}"] .recipe-data`
-		);
-		if (!recipeData || !this.itemTemplate) return;
+		const index = this.recipes.findIndex(x => x.id == id);
+		const parts = data.text.split("\n");
+		const steps = parts.map((x, i) => {
+			return {
+				picture: data.steps[i] ? this.url + data.steps[i] : "",
+				display: data.steps[i] ? "inherit" : "none",
+				text: x
+			};
+		});
 
-		recipeData.innerHTML = "";
-		const steps = data.text.split("\n");
-		for (const i in steps) {
-			const node = this.itemTemplate.content.cloneNode(
-				true
-			) as DocumentFragment;
-
-			const text = node.querySelector(".text");
-			const step = node.querySelector(".step") as HTMLImageElement;
-			if (!steps[i]) continue;
-			if (text) text.innerHTML = steps[i];
-			if (data.steps[i] && step) step.src = this.url + data.steps[i];
-			else step.remove();
-
-			recipeData.appendChild(node);
-		}
-
-		//Add ingredient
-		const ingredients = this.list.querySelector(
-			`.recipe[data-id="${id}"] .ingredients`
-		);
-		if (!ingredients || !this.ingredientTemplate) return;
-
-		ingredients.innerHTML = "";
-		for (const igredient of data.ingredients) {
-			const node = this.ingredientTemplate.content.cloneNode(
-				true
-			) as DocumentFragment;
-
-			const name = node.querySelector(".name");
-			const amount = node.querySelector(".amount");
-			if (name) name.innerHTML = igredient.name;
-			if (amount) amount.innerHTML = igredient.amount;
-
-			ingredients.appendChild(node);
-		}
+		this.safe = false;
+		this.data.recipes[index].steps = steps;
+		this.data.recipes[index].ingredients = data.ingredients;
+		this.safe = true;
 	}
 }

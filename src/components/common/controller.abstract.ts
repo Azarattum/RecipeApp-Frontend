@@ -21,6 +21,8 @@ export default function Controller<T extends string>() {
 		private sender: HTMLElement | null = null;
 		/**Placeholders list */
 		private bindings: Map<HTMLElement, Binding> | null = null;
+		/**Whether to escape html in data binding */
+		public safe: boolean = true;
 
 		/**
 		 * Creates controller class
@@ -194,7 +196,7 @@ export default function Controller<T extends string>() {
 
 					object[property] = value;
 					for (const binding of bindings) {
-						binding.set(path, value);
+						binding.set(path, value, !this.safe);
 					}
 
 					return true;

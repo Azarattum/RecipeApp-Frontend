@@ -1,20 +1,24 @@
 div.recipes-container(controller="recipes")
     div.loader.hidden Loading...
     div.recipes-list
-    template.recipe-template
-        div.recipe(onclick="Controller.selectRecipe(this.dataset.id)" data-id="0")
-            img.picture
-            div.title
-            div.description
-            div.time
+        div.recipe(
+            iterate="data.recipes"
+            onclick="Controller.selectRecipe(this.dataset.id)"
+            data-id!=data.recipes.id
+        )
+            img.picture(src!=data.recipes.picture)
+            div.title !{data.recipes.title}
+            div.description !{data.recipes.description}
+            div.time !{data.recipes.time}
             dev.loader.hidden Loading...
             div.ingredients
-            div.recipe-data
-    template.recipe-item-template
-        div.recipe-item
-            img.step
-            p.text
-    template.ingredient-template
-        div.ingredient-item
-            div.name
-            div.amount
+                div.ingredient-item(iterate="data.recipes.ingredients")
+                    div.name !{data.recipes.ingredients.name}
+                    div.amount !{data.recipes.ingredients.amount}
+            div.steps
+                div.step-item(iterate="data.recipes.steps")
+                    img.step(
+                        style!="display:" + data.recipes.steps.display
+                        src!=data.recipes.steps.picture
+                    )
+                    p.text !{data.recipes.steps.text}
