@@ -5,9 +5,15 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(name="viewport" content="width=device-width, initial-scale=1.0")
         meta(http-equiv="X-UA-Compatible" content="ie=edge")
+        meta(name="apple-mobile-web-app-capable" content="yes")
+        meta#bar(name="apple-mobile-web-app-status-bar-style" content="black-translucent")
+        link(href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet")
         title Recipe
         style
             include index.css
     body
-        div(view="search")
-        div(view="recipes")
+        input#theme.hidden(type="checkbox" name="theme")
+        div.page
+            div(view="search")
+            div(view="recipes")
+            div(view="footer")

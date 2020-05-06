@@ -36,18 +36,19 @@ export default class Search extends Controller<"suggested" | "searched">() {
 				}
 			}, 0);
 		});
-		
+
 		this.expose("search");
 	}
 
-	
 	/**
 	 * Searches the items
 	 */
 	public search(): void {
 		if (!this.strict || !this.input) return;
 
-		const ingredients: string[] = this.tagify.value.map((x: {value: string}) => x.value);
+		const ingredients: string[] = this.tagify.value.map(
+			(x: { value: string }) => x.value
+		);
 		this.emit("searched", ingredients, this.strict.checked);
 	}
 

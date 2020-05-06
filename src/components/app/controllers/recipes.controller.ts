@@ -38,9 +38,14 @@ export default class Recipes extends Controller<"reciped">() {
 	public deselectRecipe(): void {
 		if (!this.list) return;
 
+		const index = this.recipes.findIndex(x => x.id == this.activeRecipeId);
+		this.safe = false;
+		this.data.recipes[index].description = this.recipes[index].description;
+		this.safe = true;
+
 		this.activeRecipeId = 0;
+		this.list.querySelector(".backdrop")?.classList.remove("active");
 		this.list.querySelectorAll(".recipe").forEach(recipe => {
-			recipe.classList.remove("hidden");
 			recipe.classList.remove("active");
 		});
 	}
@@ -58,15 +63,13 @@ export default class Recipes extends Controller<"reciped">() {
 
 		if (!selected) return;
 
-		this.activeRecipeId = recipeId;
-		this.list.querySelectorAll(".recipe").forEach(recipe => {
-			recipe.classList.add("hidden");
-		});
+		this.list.querySelector(".backdrop")?.classList.add("active");
 
-		selected.classList.remove("hidden");
+		this.activeRecipeId = recipeId;
+
 		selected.classList.add("active");
 		//Show loader if no data was previously available
-		if (selected.querySelector(".ingredients")?.children.length == 0) {
+		if (selected.querySelector(".ingredients")?.children.length == 1) {
 			selected.querySelector(".loader")?.classList.remove("hidden");
 		}
 
@@ -96,6 +99,12 @@ export default class Recipes extends Controller<"reciped">() {
 			recipe.picture = this.url + recipe.picture;
 		}
 
+		for (const recipe of recipes) {
+			if (recipe.description.length > 100) {
+				recipe.description = recipe.description.slice(0, 100) + "...";
+			}
+		}
+
 		this.safe = false;
 		this.data.recipes = recipes;
 		this.safe = true;
@@ -120,15 +129,18 @@ export default class Recipes extends Controller<"reciped">() {
 		//Add recipe data
 		const index = this.recipes.findIndex(x => x.id == id);
 		const parts = data.text.split("\n");
-		const steps = parts.map((x, i) => {
-			return {
-				picture: data.steps[i] ? this.url + data.steps[i] : "",
-				display: data.steps[i] ? "inherit" : "none",
-				text: x
-			};
-		});
+		const steps = parts
+			.filter(x => x)
+			.map((x, i) => {
+				return {
+					picture: data.steps[i] ? this.url + data.steps[i] : "",
+					display: data.steps[i] ? "inherit" : "none",
+					text: x
+				};
+			});
 
 		this.safe = false;
+		this.data.recipes[index].description = data.description;
 		this.data.recipes[index].steps = steps;
 		this.data.recipes[index].ingredients = data.ingredients;
 		this.safe = true;

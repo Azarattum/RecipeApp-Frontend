@@ -1,3 +1,205 @@
 .tagify {
 	text-transform: lowercase;
+	border: none;
+}
+
+.tagify__dropdown {
+	padding-top: 5px;
+	margin-top: -9px;
+	z-index: 0 !important;
+	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+
+	border-bottom-left-radius: 8px;
+	border-bottom-right-radius: 8px;
+	--tagify-dd-color-primary: rgb(99, 99, 99);
+}
+
+.tagify__dropdown__wrapper {
+	border: none !important;
+}
+
+.search-container {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+
+	margin-top: 55vh;
+	transform: translateY(-100%);
+
+	.header {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height: calc(55vh - 100px - var(--margin-vertical));
+
+		font-size: 5em;
+		font-family: Quartzo;
+		text-align: center;
+		color: var(--color-text);
+		margin-bottom: var(--margin-vertical);
+
+		.logo {
+			width: 300px;
+			height: 100%;
+			background-size: contain;
+			background-repeat: no-repeat;
+			background-position: bottom;
+			background-image: url(https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.flyermakerpro.com%2F_mobile%2Fimages%2Fplaceholder_logo.jpg&f=1&nofb=1);
+		}
+	}
+
+	.search {
+		display: flex;
+
+		width: calc(100% - var(--margin-sides) * 2);
+		min-height: 40px;
+		max-width: 800px;
+		margin-left: auto;
+		margin-right: auto;
+		color: var(--color-text);
+
+		border-bottom-left-radius: var(--border-radius);
+		border-bottom-right-radius: var(--border-radius);
+
+		box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+
+		z-index: 10;
+
+		.bar {
+			float: left;
+			width: calc(100% - 44px);
+			height: 100%;
+			font-size: 18px;
+			padding: 0px;
+			margin: 0px;
+
+			border-bottom-left-radius: var(--border-radius);
+			border-top-left-radius: var(--border-radius);
+
+			background-color: var(--color-background);
+			--tag-text-color: var(--color-text);
+			--tags-border-color: var(--color-background);
+			--tags-hover-border-color: var(--color-background);
+			--tags-focus-border-color: var(--color-background);
+		}
+
+		.button {
+			width: 42px;
+
+			border-bottom-right-radius: var(--border-radius);
+			border-top-right-radius: var(--border-radius);
+
+			color: currentColor;
+			background-color: var(--color-border);
+			transition: background-color 0.2s;
+
+			&:hover {
+				background-color: var(--color-background-hover);
+				i {
+					transform: scale(1.1);
+				}
+			}
+
+			&:active {
+				background-color: var(--color-background-active);
+				i {
+					transform: scale(1.2);
+				}
+			}
+		}
+	}
+
+	.settings {
+		display: flex;
+		align-items: center;
+
+		width: calc(100% - var(--margin-sides) * 2);
+		min-height: 40px;
+		max-width: 800px;
+		margin-left: auto;
+		margin-right: auto;
+
+		input[type="checkbox"] {
+			position: relative;
+			width: 42px;
+			height: 24px;
+			float: left;
+
+			background-color: #ffffff;
+			border-radius: 50px;
+			outline: none;
+			-webkit-appearance: none;
+			appearance: none;
+			border: none;
+
+			box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.3);
+
+			overflow: hidden;
+			transition: 0.2s;
+			cursor: pointer;
+
+			& + label {
+				position: relative;
+
+				margin-left: 4px;
+				color: var(--color-text);
+				font-size: 1em;
+
+				cursor: pointer;
+				user-select: none;
+
+				i {
+					text-indent: 4px;
+					opacity: 0.4;
+					font-size: 0.7em;
+				}
+
+				&:hover {
+					.tooltip {
+						opacity: 1;
+					}
+				}
+
+				.tooltip {
+					position: absolute;
+					left: 0px;
+					opacity: 0;
+
+					padding: 8px;
+					color: var(--color-text-light);
+					background-color: var(--color-background);
+					box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+
+					pointer-events: none;
+					border-radius: var(--border-radius);
+					font-size: 0.8em;
+					transform: translateY(-110%) translateX(-10%);
+					transition: opacity 0.2s;
+					z-index: 15;
+				}
+			}
+
+			&:checked {
+				background-color: var(--color-background-active);
+				&:after {
+					left: 18px;
+					box-shadow: -4px 0px 8px rgba(0, 0, 0, 0.2);
+				}
+			}
+
+			&:after {
+				content: "";
+				background-color: white;
+				position: absolute;
+				top: 1px;
+				left: 1px;
+				width: 22px;
+				height: 22px;
+				border-radius: 50%;
+				box-shadow: 4px 0px 8px rgba(0, 0, 0, 0.2);
+				transition: 0.2s;
+			}
+		}
+	}
 }

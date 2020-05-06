@@ -6,6 +6,7 @@ import SearchView from "./views/search/search.view";
 import RecipesView from "./views/recipes/recipes.view";
 import Offline from "./services/offline.service";
 import Recipes from "./controllers/recipes.controller";
+import FooterView from "./views/footer/footer.view";
 
 /**
  * Main application class
@@ -23,6 +24,7 @@ export default class App {
 			Fetcher,
 			new RecipesView(),
 			new SearchView(),
+			new FooterView(),
 			new Search(),
 			new Recipes()
 		];

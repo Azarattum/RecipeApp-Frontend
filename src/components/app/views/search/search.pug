@@ -1,5 +1,13 @@
 div.search-container(controller="search")
-    input.search-container(type="text")
-    input(type="checkbox" id="checkbox-strict")
-    label(for="checkbox-strict") Strict
-    button.search-button(onclick="Controller.search()") Search
+    div.header
+        div.logo
+        div.title RECIPE
+    div.search
+        input.bar(type="text" autofocus)
+        button.button(onclick="Controller.search()")
+            i.material-icons search
+    div.settings
+        input(type="checkbox" id="checkbox-strict")
+        label.search-mode(for="checkbox-strict") Строгий Поиск
+            i.material-icons help
+            span.tooltip Использовать только указанные ингредиенты
