@@ -35,7 +35,13 @@ module.exports = {
 			minify: prod,
 			data: data
 		}),
-		prod ? new WorkboxPlugin.GenerateSW() : () => {},
+		prod ? new WorkboxPlugin.GenerateSW({
+			additionalManifestEntries: [
+				"assets/fonts/Quartzo.ttf",
+				"assets/images/logo.svg",
+				"apple-touch-icon.png",
+			]
+	  	}) : () => {},
 		prod ? new WebpackCleanupPlugin() : () => {}
 	],
 	module: {
