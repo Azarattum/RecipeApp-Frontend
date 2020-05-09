@@ -7,6 +7,7 @@ import RecipesView from "./views/recipes/recipes.view";
 import Offline from "./services/offline.service";
 import Recipes from "./controllers/recipes.controller";
 import FooterView from "./views/footer/footer.view";
+import ColorMatcher from "./services/color.service";
 
 /**
  * Main application class
@@ -19,9 +20,12 @@ export default class App {
 	 * Initializes the app
 	 */
 	public async initialize(): Promise<void> {
+		document.body.style.backgroundColor;
+
 		const components: IComponent[] = [
 			Offline,
 			Fetcher,
+			ColorMatcher,
 			new RecipesView(),
 			new SearchView(),
 			new FooterView(),
@@ -46,6 +50,7 @@ export default class App {
 		}
 
 		return {
+			ColorMatcher: ["--color-page"],
 			Fetcher: ["https://recipe.hldns.ru"],
 			Recipes: ["https://res.cloudinary.com/recipe-images/raw/upload/"]
 		};

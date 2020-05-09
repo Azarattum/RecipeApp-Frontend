@@ -16,9 +16,15 @@ body {
 	font-family: "Roboto", sans-serif;
 	color: var(--color-text);
 	-webkit-touch-callout: none;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 	overflow-x: hidden;
+}
 
-	background-color: rgb(247, 247, 247);
+.page {
+	--border-radius: 8px;
+	--padding-sides: 64px;
+	--margin-sides: 16px;
+	--margin-vertical: 32px;
 }
 
 @media (prefers-color-scheme: no-preference), (prefers-color-scheme: light) {
@@ -31,11 +37,6 @@ body {
 		--color-background-hover: rgb(201, 201, 201);
 		--color-background-active: rgb(199, 199, 199);
 		--color-border: rgb(212, 212, 212);
-
-		--border-radius: 8px;
-		--padding-sides: 64px;
-		--margin-sides: 16px;
-		--margin-vertical: 32px;
 	}
 
 	#theme:checked ~ * {
@@ -47,6 +48,10 @@ body {
 		--color-background-hover: rgb(49, 49, 49);
 		--color-background-active: rgb(90, 90, 90);
 		--color-border: rgb(42, 42, 42);
+	}
+
+	body {
+		background-color: rgb(247, 247, 247);
 	}
 }
 
@@ -71,11 +76,10 @@ body {
 		--color-background-hover: rgb(49, 49, 49);
 		--color-background-active: rgb(90, 90, 90);
 		--color-border: rgb(42, 42, 42);
+	}
 
-		--border-radius: 8px;
-		--padding-sides: 64px;
-		--margin-sides: 16px;
-		--margin-vertical: 32px;
+	body {
+		background-color: rgb(39, 39, 39);
 	}
 }
 

@@ -37,9 +37,9 @@ module.exports = {
 		}),
 		prod ? new WorkboxPlugin.GenerateSW({
 			additionalManifestEntries: [
-				"assets/fonts/Quartzo.ttf",
-				"assets/images/logo.svg",
-				"apple-touch-icon.png",
+				{url: "assets/fonts/Quartzo.ttf", revision: null},
+				{url: "assets/images/logo.svg", revision: null},
+				{url: "apple-touch-icon.png", revision: null}
 			]
 	  	}) : () => {},
 		prod ? new WebpackCleanupPlugin() : () => {}
