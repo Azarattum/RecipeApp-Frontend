@@ -23,7 +23,7 @@ export default class Search extends Controller<"suggested" | "searched">() {
 		this.input = this.container.querySelector("input[type='text']");
 		this.strict = this.container.querySelector("input[type='checkbox']");
 
-		this.tagify = new Tagify(this.input);
+		this.tagify = new Tagify(this.input, { editTags: false });
 		this.tagify.settings.enforceWhitelist = true;
 		this.tagify.settings.delimiters = /[\n&]/g;
 		this.tagify.on("input", this.loadSuggestions.bind(this));

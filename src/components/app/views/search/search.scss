@@ -1,6 +1,9 @@
 .tagify {
 	text-transform: lowercase;
 	border: none;
+
+	--tag-bg: var(--color-border) !important;
+	--tag-hover: rgba(148, 211, 161, 0.3) !important;
 }
 
 .tagify__dropdown {
@@ -11,11 +14,17 @@
 
 	border-bottom-left-radius: 8px;
 	border-bottom-right-radius: 8px;
-	--tagify-dd-color-primary: rgb(99, 99, 99);
+	--tagify-dd-color-primary: var(--color-text);
+	--tagify-dd-bg-color: var(--color-background);
+	color: var(--color-text);
 }
 
 .tagify__dropdown__wrapper {
 	border: none !important;
+}
+
+.tagify .tagify__tag {
+	filter: brightness(1.05);
 }
 
 .search-container {
@@ -82,6 +91,21 @@
 			--tags-border-color: var(--color-background);
 			--tags-hover-border-color: var(--color-background);
 			--tags-focus-border-color: var(--color-background);
+
+			.tagify__input {
+				overflow: hidden;
+				min-width: 160px;
+			}
+			::before {
+				width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				text-transform: none !important;
+				color: var(--color-text);
+			}
+			::after {
+				color: var(--color-text);
+			}
 		}
 
 		.button {
@@ -126,14 +150,14 @@
 			height: 24px;
 			float: left;
 
-			background-color: #ffffff;
+			background-color: var(--color-page);
 			border-radius: 50px;
 			outline: none;
 			-webkit-appearance: none;
 			appearance: none;
 			border: none;
 
-			box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.3);
+			box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.35);
 
 			overflow: hidden;
 			transition: 0.2s;
@@ -190,7 +214,7 @@
 
 			&:after {
 				content: "";
-				background-color: white;
+				background-color: var(--color-background);
 				position: absolute;
 				top: 1px;
 				left: 1px;
@@ -201,9 +225,40 @@
 				transition: 0.2s;
 			}
 		}
+
+		.theme {
+			margin-left: auto;
+			cursor: pointer;
+			color: var(--color-text);
+			user-select: none;
+			transition: 0.2s;
+			transition-property: transform, margin-right;
+
+			i {
+				font-size: 2em;
+			}
+		}
 	}
 }
 
-.bar > span:empty::before {
-	text-transform: none !important;
+@media (prefers-color-scheme: no-preference), (prefers-color-scheme: light) {
+	#theme:checked + .page .theme {
+		margin-right: 6px;
+		transform: rotateY(180deg);
+	}
+
+	#theme:checked ~ .tagify__dropdown .tagify__dropdown__item--active {
+		color: var(--color-background) !important;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	#theme:not(:checked) + .page .theme {
+		margin-right: 6px;
+		transform: rotateY(180deg);
+	}
+
+	#theme:not(:checked) ~ .tagify__dropdown .tagify__dropdown__item--active {
+		color: var(--color-background) !important;
+	}
 }

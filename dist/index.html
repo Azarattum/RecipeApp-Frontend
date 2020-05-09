@@ -21,20 +21,65 @@ body {
 	background-color: rgb(247, 247, 247);
 }
 
+@media (prefers-color-scheme: no-preference), (prefers-color-scheme: light) {
+	#theme ~ * {
+		--color-text: rgb(82, 82, 82);
+		--color-text-dark: rgb(19, 19, 19);
+		--color-text-light: rgb(141, 141, 141);
+		--color-page: rgb(247, 247, 247);
+		--color-background: rgb(255, 255, 255);
+		--color-background-hover: rgb(201, 201, 201);
+		--color-background-active: rgb(199, 199, 199);
+		--color-border: rgb(212, 212, 212);
+
+		--border-radius: 8px;
+		--padding-sides: 64px;
+		--margin-sides: 16px;
+		--margin-vertical: 32px;
+	}
+
+	#theme:checked ~ * {
+		--color-text: rgb(233, 233, 233);
+		--color-text-dark: rgb(226, 226, 226);
+		--color-text-light: rgb(165, 165, 165);
+		--color-page: rgb(39, 39, 39);
+		--color-background: rgb(26, 26, 26);
+		--color-background-hover: rgb(49, 49, 49);
+		--color-background-active: rgb(90, 90, 90);
+		--color-border: rgb(42, 42, 42);
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	#theme:checked ~ * {
+		--color-text: rgb(82, 82, 82);
+		--color-text-dark: rgb(19, 19, 19);
+		--color-text-light: rgb(141, 141, 141);
+		--color-page: rgb(247, 247, 247);
+		--color-background: rgb(255, 255, 255);
+		--color-background-hover: rgb(201, 201, 201);
+		--color-background-active: rgb(199, 199, 199);
+		--color-border: rgb(212, 212, 212);
+	}
+
+	#theme ~ * {
+		--color-text: rgb(233, 233, 233);
+		--color-text-dark: rgb(226, 226, 226);
+		--color-text-light: rgb(165, 165, 165);
+		--color-page: rgb(39, 39, 39);
+		--color-background: rgb(26, 26, 26);
+		--color-background-hover: rgb(49, 49, 49);
+		--color-background-active: rgb(90, 90, 90);
+		--color-border: rgb(42, 42, 42);
+
+		--border-radius: 8px;
+		--padding-sides: 64px;
+		--margin-sides: 16px;
+		--margin-vertical: 32px;
+	}
+}
+
 .page {
-	--color-text: rgb(82, 82, 82);
-	--color-text-light: rgb(141, 141, 141);
-	--color-page: rgb(247, 247, 247);
-	--color-background: rgb(255, 255, 255);
-	--color-background-hover: rgb(201, 201, 201);
-	--color-background-active: rgb(199, 199, 199);
-	--color-border: rgb(212, 212, 212);
-
-	--border-radius: 8px;
-	--padding-sides: 64px;
-	--margin-sides: 16px;
-	--margin-vertical: 32px;
-
 	position: absolute;
 	background-color: var(--color-page);
 	width: 100vw;
@@ -45,10 +90,6 @@ body {
 
 .page > div[view="search"] {
 	height: 0;
-}
-
-#theme:checked + .page {
-	--color-text: rgb(0, 0, 0);
 }
 
 @media only screen and (max-width: 600px) {
