@@ -45,7 +45,7 @@
 			background-size: contain;
 			background-repeat: no-repeat;
 			background-position: bottom;
-			background-image: url(https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.flyermakerpro.com%2F_mobile%2Fimages%2Fplaceholder_logo.jpg&f=1&nofb=1);
+			background-image: url(/assets/images/logo.svg);
 		}
 	}
 
@@ -202,4 +202,8 @@
 			}
 		}
 	}
+}
+
+.bar > span:empty::before {
+	text-transform: none !important;
 }
