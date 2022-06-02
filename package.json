@@ -6,7 +6,7 @@
 		"watch": "node_modules/.bin/webpack-cli -d -w"
 	},
 	"dependencies": {
-		"@yaireo/tagify": "^3.7.1"
+		"@yaireo/tagify": "^4.9.8"
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^2.24.0",
